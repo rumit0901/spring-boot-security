@@ -1,0 +1,28 @@
+server:
+  error:
+    whitelabel:
+      enabled: false
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: 123456
+    url: jdbc:mysql://localhost:3306/spring
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    show-sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+           google:
+              client-id: 832281747591-a2t33v67oetukhetr0urujeck74i7ii5.apps.googleusercontent.com
+              client-secret: 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
+              scope:
+              - email
+              - profile
+   

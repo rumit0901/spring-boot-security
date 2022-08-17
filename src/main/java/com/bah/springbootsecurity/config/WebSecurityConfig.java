@@ -11,8 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import com.bah.springbootsecurity.oauth2.Oauth2UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -26,6 +29,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	@Autowired
+	private Oauth2UserService oauth2UserService;
 	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -55,7 +61,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().and().exceptionHandling().accessDeniedPage("/403");
 
 		// Cấu hình cho Login Form.
-		http.authorizeRequests().and().formLogin()//
+		http.authorizeRequests()
+			.and()
+			.formLogin()//
 				// Submit URL của trang login
 				.loginProcessingUrl("/j_spring_security_check") // Submit URL
 				.loginPage("/login")//
@@ -63,7 +71,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.failureUrl("/login?error=true")//
 				.usernameParameter("username")//
 				.passwordParameter("password")
-				// Cấu hình cho Logout Page.
+			.and()
+			.oauth2Login()
+				.loginPage("/login")
+				.userInfoEndpoint()
+				.userService(oauth2UserService)
+				.and()
 				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/logoutSuccessful");
 
 		// Cấu hình Remember Me.

@@ -10,6 +10,9 @@
 
 <h1>Login</h1>
 
+<div>
+	<a th:href="@{/oauth2/authorization/google}">Continue with Google</a>
+</div>
 <div th:if="${#request.getParameter('error') == 'true'}" style="color: red; margin: 10px 0px">Login Failed!!
 <br>
 Reason:<span th:if="${#session != null and 
